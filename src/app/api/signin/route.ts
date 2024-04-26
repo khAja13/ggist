@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { signInSchema } from "@/validations";
 import { NextRequest, NextResponse } from "next/server";
 import { createSession } from "@/util/session";
+import exclude from "@/util/prisma-omit";
 
 export async function POST(request: NextRequest){
     try {
@@ -29,11 +30,12 @@ export async function POST(request: NextRequest){
                 }
 
                 await createSession(userExists.id);
+                const user = exclude(userExists, ['password']);
                 
                 return NextResponse.json({
                     message: "Valid user",
                     success: true,
-                    userExists
+                    user
                 }, {status: 201})
             } else {
                 return NextResponse.json({error: "Invalid credentials"}, {status: 404})

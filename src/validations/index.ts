@@ -16,3 +16,8 @@ export const signInSchema = z.object({
         .email("Please enter a valid email"),
     password: z.string().min(1, { message: "Password can't be empty"})
 })
+
+export const gistSchema = z.object({
+    gistDescription: z.string(),
+    gistContet: z.string().min(1, { message: "Gist can't be empty"})
+})

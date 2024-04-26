@@ -3,6 +3,7 @@ import bcryptjs from "bcryptjs";
 import { signUpSchema } from "@/validations";
 import { NextRequest, NextResponse } from "next/server";
 import { createSession } from "@/util/session";
+import exclude from "@/util/prisma-omit";
 
 export async function POST(request: NextRequest){
     try {
@@ -24,16 +25,16 @@ export async function POST(request: NextRequest){
                 const salt = await bcryptjs.genSalt(10);
                 const hashedPassword = await bcryptjs.hash(password, salt);
 
-                const newUser = await db.user.create({
+                const newUser = exclude(await db.user.create({
                     data: {
                         name: username,
                         email: email,
                         password: hashedPassword,
                         provider: "EMAIL"
                     },
-                });
+                }), ['password']);
 
-                await createSession(newUser.id);
+                await createSession(String(newUser.id));
                 
                 return NextResponse.json({
                     message: "User created successfully",

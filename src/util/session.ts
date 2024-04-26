@@ -4,6 +4,7 @@ import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { db } from '@/db'
 import { cache } from 'react'
+import exclude from './prisma-omit'
  
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
@@ -80,14 +81,14 @@ export const getUser = (async () => {
     if (!session) return null
    
     try {
-      const data = await db.user.findFirst({
+      const data = exclude(await db.user.findFirst({
         where: {
           id: session.userId
         },
         include: {
           gists: true
         }
-      });
+      }), ['password']);
       
       updateSession();
       return data;

@@ -1,9 +1,10 @@
 'use client';
 
-import Header from "@/components/Header";
 import { getUser } from "@/util/session";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "./loading";
+import App from "./App";
+import Header from "@/components/Header";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,12 @@ export default function Home() {
   
   return (
     <>
-      {loading ? <LoadingSpinner /> : <Header user={user} />}
+      {loading ? <LoadingSpinner /> : 
+        <>
+          <Header user={user}/>
+          <App user={user} />
+        </>
+      }
     </>
   );
 }
