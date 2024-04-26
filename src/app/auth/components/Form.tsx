@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,11 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useFormState, useFormStatus } from "react-dom"
+import Link from "next/link"
 
 export function CustomForm({ onSubmit, authType, formSchema }: {onSubmit: any, authType: string, formSchema: any}) {
-  const { pending } = useFormStatus();
-  const [state, action] = useFormState(onSubmit, undefined);
   const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -26,11 +25,10 @@ export function CustomForm({ onSubmit, authType, formSchema }: {onSubmit: any, a
           password: ""
         },
   })
-  console.log("in react form ", state);
-
+  
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form action={form.handleSubmit(onSubmit)} className="space-y-8">
         {authType == "signup" ? <FormField
           control={form.control}
           name="username"
@@ -64,13 +62,23 @@ export function CustomForm({ onSubmit, authType, formSchema }: {onSubmit: any, a
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} type="password"/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" aria-disabled={pending}>Submit</Button>
+        {authType === 'signup' ? 
+          <p className="mt-4">
+            Already have an account? <Link className="text-red-500 underline" href="/auth/signin">Login here</Link> 
+          </p>
+            : 
+            <p className="mt-4">
+              Don't have an account? <Link className="text-blue-500 underline" href="/auth/signup">Register here</Link>
+            </p>
+          }
+          <br />
+        <Button className="!-mt-12" type="submit">Submit</Button>
       </form>
     </Form>
   )

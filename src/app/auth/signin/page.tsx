@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import LoadingSpinner from "@/app/loading";
+import { toast } from "@/components/ui/use-toast";
 
 export default function SignIn() {
     const [ loading, setLoading ] = useState(false);
@@ -20,7 +21,12 @@ export default function SignIn() {
             router.refresh();
             return;
         } catch (error:any) {
-            console.log("Signin failed", error.message);
+            // Need to show the in form validations
+            toast({
+                variant: "destructive",
+                title: "Signup Error",
+                description: error.response.data.error,
+            })
         }finally {
             setLoading(false);
         }

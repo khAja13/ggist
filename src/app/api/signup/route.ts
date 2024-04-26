@@ -19,7 +19,7 @@ export async function POST(request: NextRequest){
             })
     
             if(userExists) {
-                return NextResponse.json({error: "Email is already taken"}, {status: 500})
+                return NextResponse.json({error: "Email is already taken"}, {status: 401})
             } else {
                 const salt = await bcryptjs.genSalt(10);
                 const hashedPassword = await bcryptjs.hash(password, salt);

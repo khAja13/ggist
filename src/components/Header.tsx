@@ -78,12 +78,21 @@ export default function Header({ user }: { user: UserWithGistType | undefined}) 
                   width="120"
                 />
               </Link>
+              {user ? <><div className="grid gap-2 py-6">
+                <Button variant="outline" className="font-semibold relative" onClick={() => {
+                        deleteSession();
+                        router.refresh();
+                      }}>Log out</Button>
+              </div></>: 
+              <>
               <div className="grid gap-2 py-6">
                 <Button className="font-semibold relative" variant="outline">
                     Sign in
                 </Button>
                 <Button variant="outline" className="font-semibold relative">Sign Up</Button>
               </div>
+              </>}
+              
             </SheetContent>
           </Sheet>
         </div>

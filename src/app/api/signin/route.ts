@@ -36,7 +36,7 @@ export async function POST(request: NextRequest){
                     userExists
                 }, {status: 201})
             } else {
-                return NextResponse.json({error: "Invalid user"}, {status: 404})
+                return NextResponse.json({error: "Invalid credentials"}, {status: 404})
             }
         } else {
             return NextResponse.json({error: "Invalid Inputs"}, {status: 401})
