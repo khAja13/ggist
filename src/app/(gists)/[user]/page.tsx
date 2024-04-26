@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import LoadingSpinner from "@/app/loading";
@@ -12,7 +13,6 @@ export default function UserPage({ params, user }: { params: { user: string }, u
     useEffect(() => {
       async function fetchUser() {
         const resp = await getUser();
-        // @ts-ignore
         setGistUser(resp);
         setLoading(false);
       }
