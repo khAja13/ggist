@@ -3,6 +3,7 @@
 import Header from "@/components/Header";
 import { getUser } from "@/util/session";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "./loading";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ export default function Home() {
   
   return (
     <>
-      {loading ? <h1>Loading..</h1> : <Header user={user} />}
+      {loading ? <LoadingSpinner /> : <Header user={user} />}
     </>
   );
 }

@@ -5,6 +5,7 @@ import FormPage from "../components/FormPage";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import LoadingSpinner from "@/app/loading";
 
 export default function SignIn() {
     const [ loading, setLoading ] = useState(false);
@@ -28,7 +29,7 @@ export default function SignIn() {
     return(
         <>
             {
-                loading ? <h1>Loading..</h1> : <FormPage authType="signin" onSubmit={onSubmit} formSchema={signInSchema}/>
+                loading ? <LoadingSpinner /> : <FormPage authType="signin" onSubmit={onSubmit} formSchema={signInSchema}/>
             }
         </>
     )

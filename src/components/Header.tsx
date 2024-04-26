@@ -9,8 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation";
+import { deleteSession } from "@/util/session";
 
 export default function Header({ user }: { user: UserWithGistType | undefined}) {
+  const router = useRouter();
   const firstNameInitial = user?.name[0] ? user?.name[0][0] : "";
   const lastNameInitial = user?.name[1] ? user?.name[1][0] : "";
 
@@ -41,7 +44,10 @@ export default function Header({ user }: { user: UserWithGistType | undefined}) 
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem>{user.name}</DropdownMenuItem>
-                      <DropdownMenuItem>Logout</DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                        deleteSession();
+                        router.refresh();
+                      }}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu> : 
           <>
