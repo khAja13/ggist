@@ -74,7 +74,7 @@ export function CustomForm({ onSubmit, authType, formSchema }: {onSubmit: any, a
           </p>
             : 
             <p className="mt-4">
-              Don't have an account? <Link className="text-blue-500 underline" href="/auth/signup">Register here</Link>
+              Don&apos;t have an account? <Link className="text-blue-500 underline" href="/auth/signup">Register here</Link>
             </p>
           }
           <br />
