@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import LoadingSpinner from "@/app/loading";
@@ -8,7 +7,7 @@ import { useEffect, useState } from "react";
 
 export default function UserPage({ params, user }: { params: { user: string }, user: UserWithGistType }) {
   const [loading, setLoading] = useState(true);
-  const [gistUser, setGistUser] = useState<UserWithGistType>();
+  const [gistUser, setGistUser] = useState<any>();
   
     useEffect(() => {
       async function fetchUser() {
