@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
       if (userExists) {
         return NextResponse.json(
-          { error: "Email is already taken" },
+          { error: "Username and email is should be unique" },
           { status: 401 }
         );
       } else {
