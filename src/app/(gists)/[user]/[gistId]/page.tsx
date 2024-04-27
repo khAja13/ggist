@@ -13,21 +13,32 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 
-export default function UserPage({ params }: { params: { user: string } }) {
+export default function UserPage({
+  params,
+}: {
+  params: { user: string; gistId: string };
+}) {
   const [loading, setLoading] = useState(true);
-  const [gistUser, setGistUser] = useState<any>();
+  const [gist, setGist] = useState<any>();
 
   useEffect(() => {
     async function fetchUser() {
-      const resp = await fetch("/api/user", {
+      const resp = await fetch("/api/user/gist", {
         method: "POST",
         body: JSON.stringify({
-          userId: decodeURIComponent(params.user),
+          username: decodeURIComponent(params.user),
+          gistId: params.gistId,
         }),
       });
       const data = await resp.json();
-      setGistUser(data.user);
-      setLoading(false);
+
+      if (resp.status > 200) {
+        // need to show a toast for invalid user
+        return;
+      } else {
+        setGist(data.newGist);
+        setLoading(false);
+      }
     }
 
     fetchUser();
@@ -39,8 +50,8 @@ export default function UserPage({ params }: { params: { user: string } }) {
         <LoadingSpinner />
       ) : (
         <>
-          <Header user={gistUser} />
-          {gistUser && <AvatarWithContent user={gistUser} />}
+          <Header user={gist} />
+          <AvatarWithContent user={gist} />
         </>
       )}
     </>
@@ -49,7 +60,11 @@ export default function UserPage({ params }: { params: { user: string } }) {
 
 function AvatarWithContent({ user }) {
   const { theme } = useTheme();
-  const name = user?.name[0] ? user?.name[0] + user?.name[1] : "";
+  let name;
+
+  if (user && user.name) {
+    name = user?.name[0] ? user?.name[0] + user?.name[1] : "";
+  }
 
   const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
