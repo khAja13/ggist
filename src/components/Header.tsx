@@ -83,7 +83,7 @@ export default function Header({
             </>
           )}
 
-          <Sheet>
+          {/* <Sheet>
             <SheetTrigger asChild className="sm:hidden">
               <Button className="sm:hidden" size="icon" variant="outline">
                 <MenuIcon className="h-6 w-6" />
@@ -138,7 +138,7 @@ export default function Header({
                 </>
               )}
             </SheetContent>
-          </Sheet>
+          </Sheet> */}
         </div>
       </nav>
     </header>
