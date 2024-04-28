@@ -64,6 +64,9 @@ function AvatarWithContent({ user }) {
         <div className="w-full md:w-3/4 m-auto">
           <div className="col-span-8">
             <div>
+              {user.gists.length == 0 && (
+                <h1 className="text-lg">You don't have any gists created..</h1>
+              )}
               {user.gists.map((gist) => {
                 return (
                   <div className="mb-6" key={gist.id}>
