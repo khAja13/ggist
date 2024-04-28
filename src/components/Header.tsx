@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/ThemeToggle";
-import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -13,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { deleteSession } from "@/util/session";
+import Image from "next/image";
 
 export default function Header({
   user,
@@ -29,20 +28,20 @@ export default function Header({
   return (
     <header className="fixed inset-x-0 top-0 h-16 z-50 flex items-center px-4 bg-opacity-90 backdrop-blur-sm border-b border-gray-200 backdrop-filter dark:border-gray-800 dark:bg-gray-950/90">
       <nav className="flex-1 flex items-center justify-between">
-        <Link href="#">
-          <img
-            alt="Acme Inc"
-            className="object-contain"
+        <Link href="/">
+          <Image
+            alt="Gist"
+            className="object-contain md:ml-8 w-14 md:w-16"
             height="40"
-            src="/placeholder.svg"
+            src="/gist.png"
             style={{
-              aspectRatio: "120/40",
               objectFit: "cover",
+              fill: "white",
             }}
-            width="120"
+            width="80"
           />
         </Link>
-        <div className="flex-1 flex justify-end items-center space-x-8">
+        <div className="flex-1 flex justify-end items-center space-x-8 md:mr-8">
           <ModeToggle />
           {user && user.name ? (
             <DropdownMenu>
@@ -53,7 +52,13 @@ export default function Header({
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>{user.name}</DropdownMenuItem>
+                <DropdownMenuItem>Logged in as: {user.name}</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/">Create gist</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={"/" + user.name}>View gists</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => {
