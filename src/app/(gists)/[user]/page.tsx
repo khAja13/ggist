@@ -12,6 +12,7 @@ import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
+import { timeAgo } from "@/util/util";
 
 export default function UserPage({ params }: { params: { user: string } }) {
   const [loading, setLoading] = useState(true);
@@ -59,8 +60,8 @@ function AvatarWithContent({ user }) {
 
   return (
     <>
-      <div className="container mt-16 py-8">
-        <div className="w-3/4 m-auto">
+      <div className="px-2 md:px-0 md:container mt-16 py-8">
+        <div className="w-full md:w-3/4 m-auto">
           <div className="col-span-8">
             <div>
               {user.gists.map((gist) => {
@@ -79,7 +80,7 @@ function AvatarWithContent({ user }) {
                           {user.name}/{gist.id}
                         </Link>
                         <p className="text-sm text-slate-500 font-medium">
-                          Created {String(gist.createdAt)}
+                          Created {timeAgo(new Date(gist.createdAt))}
                         </p>
                         <p className="text-sm text-slate-500 font-medium">
                           {gist.title}
