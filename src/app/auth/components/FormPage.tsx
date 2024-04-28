@@ -27,13 +27,13 @@ export default async function FormPage({
           <div className="flex-grow h-px bg-gray-300" />
         </div>
         <Link
-          href={"/auth/google"}
+          href="#"
           className="flex items-center justify-center w-full mb-4 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         >
           Google
         </Link>
         <Link
-          href={"/auth/github"}
+          href="#"
           className="flex items-center justify-center w-full mb-4 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         >
           Github
