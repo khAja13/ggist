@@ -65,7 +65,9 @@ function AvatarWithContent({ user }) {
           <div className="col-span-8">
             <div>
               {user.gists.length == 0 && (
-                <h1 className="text-lg">You don't have any gists created..</h1>
+                <h1 className="text-lg">
+                  You don&apos;t have any gists created..
+                </h1>
               )}
               {user.gists.map((gist) => {
                 return (
