@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
           ["password"]
         );
 
-        await createSession(String(newUser.id));
+        await createSession(String(newUser?.id));
 
         return NextResponse.json(
           {
