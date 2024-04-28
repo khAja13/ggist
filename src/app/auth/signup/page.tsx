@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { signUpSchema } from "@/validations";
 import FormPage from "../components/FormPage";
@@ -9,34 +9,39 @@ import LoadingSpinner from "@/app/loading";
 import { toast } from "@/components/ui/use-toast";
 
 export default function SignUp() {
-    const [ loading, setLoading ] = useState(false);
-    const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-    async function onSubmit(user: FormData) {
-        
-        try {
-            setLoading(true);
-            await axios.post("/api/signup", user);
-            router.push("/");
-        } catch (error:any) {
-            // Need to show the in form validations
-            toast({
-                variant: "destructive",
-                title: "Signup Error",
-                description: error.response.data.error,
-            })
-        }finally {
-            setLoading(false);
-        }
-
-        return {};
+  async function onSubmit(user: FormData) {
+    try {
+      setLoading(true);
+      await axios.post("/api/signup", user);
+      router.push("/");
+    } catch (error: any) {
+      // Need to show the in form validations
+      toast({
+        variant: "destructive",
+        title: "Signup Error",
+        description: error.response.data.error,
+      });
+    } finally {
+      setLoading(false);
     }
 
-    return(
-        <>
-            {
-                loading ? <LoadingSpinner /> : <FormPage authType="signup" onSubmit={onSubmit} formSchema={signUpSchema}/>
-            }
-        </>
-    )
+    return {};
+  }
+
+  return (
+    <>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <FormPage
+          authType="signup"
+          onSubmit={onSubmit}
+          formSchema={signUpSchema}
+        />
+      )}
+    </>
+  );
 }

@@ -5,7 +5,7 @@ export default function GistHeader({ user }: { user: UserWithGistType }) {
     <>
       <div className="container p-6">
         <Link
-          className="block text-right mr-32 font-semibold text-blue-500"
+          className="block text-center md:mr-32 font-semibold text-blue-500"
           href={user.name}
         >
           View your gists
