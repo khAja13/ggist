@@ -22,8 +22,8 @@ model User {
 model Gist {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  title     String  @db.VarChar(65535)
-  content   String @db.VarChar(65535)
+  title     String  @db.Text
+  content   String @db.Text
   updatedAt DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id])

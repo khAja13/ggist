@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import LoadingSpinner from "@/app/loading";
 import { Input } from "../ui/input";
+import { toast } from "../ui/use-toast";
 
 export default function GistEditor({ user }: { user: UserWithGistType }) {
   const { theme } = useTheme();
@@ -62,15 +63,26 @@ export default function GistEditor({ user }: { user: UserWithGistType }) {
               className="mt-4"
               onClick={async () => {
                 setLoading(true);
-                const resp = await fetch("/api/gist", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    gistDescription: description,
-                    gistContet: content,
-                  }),
-                });
-                const data = await resp.json();
-                window.location.href = user.name + "/" + data.newGist.id;
+                try {
+                  const resp = await fetch("/api/gist", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      gistDescription: description,
+                      gistContet: content,
+                    }),
+                  });
+                  const data = await resp.json();
+                  window.location.href = user.name + "/" + data.newGist.id;
+                } catch (err) {
+                  toast({
+                    variant: "destructive",
+                    title: "Couldn't insert your gist",
+                    description:
+                      "Some error has occured while creating your gist",
+                  });
+                } finally {
+                  setLoading(false);
+                }
               }}
             >
               Create Gist

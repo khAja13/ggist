@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Invalid user" }, { status: 401 });
       }
     } else {
-      return NextResponse.json({ error: "Invalid Inputs" }, { status: 401 });
+      return NextResponse.json({ error: "Invalid Inputs" }, { status: 400 });
     }
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
