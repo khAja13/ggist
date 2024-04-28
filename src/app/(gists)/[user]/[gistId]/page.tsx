@@ -13,6 +13,7 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import { timeAgo } from "@/util/util";
+import { getUser } from "@/util/session";
 
 export default function UserPage({
   params,
@@ -21,9 +22,11 @@ export default function UserPage({
 }) {
   const [loading, setLoading] = useState(true);
   const [gist, setGist] = useState<any>();
+  const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
     async function fetchUser() {
+      const currentUser = await getUser();
       const resp = await fetch("/api/user/gist", {
         method: "POST",
         body: JSON.stringify({
@@ -37,6 +40,7 @@ export default function UserPage({
         // need to show a toast for invalid user
         return;
       } else {
+        setCurrentUser(currentUser);
         setGist(data.newGist);
         setLoading(false);
       }
@@ -51,7 +55,7 @@ export default function UserPage({
         <LoadingSpinner />
       ) : (
         <>
-          <Header user={gist} />
+          <Header user={currentUser} />
           <AvatarWithContent user={gist} />
         </>
       )}

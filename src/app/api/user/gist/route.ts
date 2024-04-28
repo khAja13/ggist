@@ -9,13 +9,9 @@ export async function POST(request: NextRequest) {
     const userId = await verifySession();
 
     let whereClause = {
+      // @ts-ignore
       name: String(reqBody.username),
     };
-
-    if (userId) {
-      // @ts-ignore
-      whereClause.id = String(userId.userId);
-    }
 
     const gist = await db.user.findUnique({
       // @ts-ignore
