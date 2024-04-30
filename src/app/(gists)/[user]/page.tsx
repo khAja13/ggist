@@ -13,26 +13,58 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import { timeAgo } from "@/util/util";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchInitialUserData } from "@/lib/store";
 
 export default function UserPage({ params }: { params: { user: string } }) {
   const [loading, setLoading] = useState(true);
   const [gistUser, setGistUser] = useState<any>();
+  const sessionGistUser = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    async function fetchUser() {
-      const resp = await fetch("/api/user", {
-        method: "POST",
-        body: JSON.stringify({
-          userId: decodeURIComponent(params.user),
-        }),
-      });
-      const data = await resp.json();
+  const getUser = () => {
+    try {
+      dispatch(fetchInitialUserData());
+      setLoading(false);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const fetchUser = async () => {
+    console.log("fetching user");
+
+    const resp = await fetch("/api/user", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: decodeURIComponent(params.user),
+      }),
+    });
+    const data = await resp.json();
+    console.log("done with it");
+
+    if (resp.status > 200) {
+      // invalid user
+    } else {
       setGistUser(data.user);
       setLoading(false);
     }
+  };
 
-    fetchUser();
+  useEffect(() => {
+    getUser();
   }, []);
+
+  useEffect(() => {
+    if (sessionGistUser.id) {
+      if (sessionGistUser.name !== decodeURIComponent(params.user)) {
+        fetchUser();
+      } else {
+        setGistUser(sessionGistUser);
+      }
+      setLoading(false);
+    }
+  }, [loading]);
 
   return (
     <>
@@ -41,7 +73,11 @@ export default function UserPage({ params }: { params: { user: string } }) {
       ) : (
         <>
           <Header user={gistUser} />
-          {gistUser && <AvatarWithContent user={gistUser} />}
+          {gistUser ? (
+            <AvatarWithContent user={gistUser} />
+          ) : (
+            <h1 className="text-lg mt-20">Unable to find user</h1>
+          )}
         </>
       )}
     </>

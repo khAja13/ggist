@@ -1,10 +1,16 @@
 import React from "react";
 import Gist from "../components/gist/Gist";
+import Header from "@/components/Header";
+import { useSelector } from "react-redux";
 
-export default async function App({ user, children }: {user?: UserWithGistType | undefined, children?: React.ReactNode}) {
-    return(
-        <>
-            <Gist user={user}/>
-        </>
-    )
+export default async function App() {
+  ///@ts-ignore
+  const user = useSelector((state) => state.user);
+
+  return (
+    <>
+      <Header user={user} />
+      <Gist user={user} />
+    </>
+  );
 }
