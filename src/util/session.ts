@@ -50,14 +50,23 @@ export async function updateSession() {
     return null;
   }
 
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  cookies().set("session", session, {
-    httpOnly: true,
-    secure: true,
-    expires: expires,
-    sameSite: "lax",
-    path: "/",
-  });
+  const expiresAt = new Date(payload.expiresAt as string);
+  const oneDayFromNow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+  if (expiresAt < oneDayFromNow) {
+    const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const newSession = await encrypt({ userId: payload.userId, expiresAt: newExpiresAt });
+    
+    cookies().set("session", newSession, {
+      httpOnly: true,
+      secure: true,
+      expires: newExpiresAt,
+      sameSite: "lax",
+      path: "/",
+    });
+  }
+
+  return payload;
 }
 
 export async function deleteSession() {
@@ -93,7 +102,7 @@ export const getUser = async () => {
       ["password"]
     );
 
-    updateSession();
+    updateSession().catch(console.error);
     return data;
   } catch (error) {
     console.log("Failed to fetch user ", error);
