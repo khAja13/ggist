@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
 import LoadingSpinner from "./loading";
-import StoreProvider from "./StoreProvider";
+import { RecoilRootProvider } from "./RecoilRoot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Suspense fallback={<LoadingSpinner />}>
-            <StoreProvider>{children}</StoreProvider>
+            <RecoilRootProvider>{children}</RecoilRootProvider>
           </Suspense>
         </ThemeProvider>
       </body>
