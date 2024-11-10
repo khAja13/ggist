@@ -36,9 +36,7 @@ export async function POST(request: NextRequest) {
           "id",
           "createdAt",
           "email",
-          "name",
           "password",
-          "picture",
           "provider",
         ]);
       }
