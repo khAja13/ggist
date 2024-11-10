@@ -12,6 +12,8 @@ import {
 import { useRouter } from "next/navigation";
 import { deleteSession } from "@/util/session";
 import Image from "next/image";
+import { useSetRecoilState } from "recoil";
+import { userState } from "@/lib/store1";
 
 export default function Header({
   user,
@@ -19,6 +21,7 @@ export default function Header({
   user: UserWithGistType | undefined;
 }) {
   const router = useRouter();
+  const setUser = useSetRecoilState(userState);
   let name;
 
   if (user && user.name) {
@@ -63,6 +66,7 @@ export default function Header({
                   className="cursor-pointer"
                   onClick={() => {
                     deleteSession();
+                    setUser([]);
                     router.refresh();
                   }}
                 >

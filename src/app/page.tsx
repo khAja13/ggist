@@ -1,28 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import App from "./App";
-import { fetchInitialUserData } from "@/lib/store";
-import { useDispatch } from "react-redux";
-import LoadingSpinner from "./loading";
+import { getUser } from "@/util/session";
 
-export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
+export default async function Home() {
+  const user = await getUser();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        //@ts-ignore
-        dispatch(fetchInitialUserData());
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  return <>{loading ? <LoadingSpinner /> : <App />}</>;
+  //@ts-ignore
+  return <App user={user} />;
 }
+  

@@ -13,7 +13,8 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import { timeAgo } from "@/util/util";
-import { getUser } from "@/util/session";
+import { useRecoilValue } from "recoil";
+import { usersSelector } from "@/lib/store1";
 
 export default function UserPage({
   params,
@@ -22,11 +23,10 @@ export default function UserPage({
 }) {
   const [loading, setLoading] = useState(true);
   const [gist, setGist] = useState<any>();
-  const [currentUser, setCurrentUser] = useState();
+  const gistUser = useRecoilValue(usersSelector);
 
   useEffect(() => {
-    async function fetchUser() {
-      const currentUser = await getUser();
+    async function fetchGist() {
       const resp = await fetch("/api/user/gist", {
         method: "POST",
         body: JSON.stringify({
@@ -37,98 +37,90 @@ export default function UserPage({
       const data = await resp.json();
 
       if (resp.status > 200) {
-        // need to show a toast for invalid user
+        console.error("Failed to fetch gist:", data);
         return;
       } else {
-        setCurrentUser(currentUser);
         setGist(data.newGist);
         setLoading(false);
       }
     }
 
-    fetchUser();
-  }, []);
+    fetchGist();
+  }, [params.user, params.gistId]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <Header user={currentUser} />
-          <AvatarWithContent user={gist} />
-        </>
-      )}
+      <Header user={gistUser} />
+      <AvatarWithContent user={gist} />
     </>
   );
 }
 
 function AvatarWithContent({ user }) {
   const { theme } = useTheme();
-  let name;
+  const name = user?.name ? `${user.name[0]}${user.name[1]}` : "Unknown User";
 
-  if (user && user.name) {
-    name = user?.name[0] ? user?.name[0] + user?.name[1] : "";
-  }
-
-  const hightlightWithLineNumbers = (input, language) =>
+  const highlightWithLineNumbers = (input, language) =>
     highlight(input, language)
       .split("\n")
       .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
       .join("\n");
 
   return (
-    <>
-      <div className="px-2 md:px-0 md:container mt-16 py-8">
-        <div className="w-full md:w-3/4 m-auto">
-          <div className="col-span-8">
-            <div>
-              {user.gists.map((gist) => {
-                return (
-                  <div className="mb-6" key={gist.id}>
-                    <div className="flex gap-2">
-                      <Avatar className="rounded-2xl">
-                        <AvatarImage src={user.picture} />
-                        <AvatarFallback>{name}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <Link
-                          href={`/${user.name}/${gist.id}`}
-                          className="text-blue-500 font-semibold"
-                        >
-                          {user.name}/{gist.id}
-                        </Link>
-                        <p className="text-sm text-slate-500 font-medium">
-                          Created {timeAgo(new Date(gist.createdAt))}
-                        </p>
-                        <p className="text-sm text-slate-500 font-medium">
-                          {gist.title}
-                        </p>
-                      </div>
-                    </div>
-                    <Editor
-                      className="border border-black-500 rounded mt-2 editor"
-                      value={gist.content}
-                      onValueChange={() => {}}
-                      textareaId="codeArea"
-                      highlight={(code) =>
-                        hightlightWithLineNumbers(code, languages.js)
-                      }
-                      padding={10}
-                      style={{
-                        fontFamily: '"Fira code", "Fira Mono", monospace',
-                        fontSize: 12,
-                        outline: 0,
-                        background: theme === "light" ? "#fff" : "#0d1117",
-                      }}
-                    />
+    <div className="px-2 md:px-0 md:container mt-16 py-8">
+      <div className="w-full md:w-3/4 m-auto">
+        <div className="col-span-8">
+          <div>
+            {user?.gists.length === 0 && (
+              <h1 className="text-lg">This gist doesn't exist or has no content.</h1>
+            )}
+            {user?.gists?.map((gist) => (
+              <div className="mb-6" key={gist.id}>
+                <div className="flex gap-2">
+                  <Avatar className="rounded-2xl">
+                    <AvatarImage src={user.picture || "/default-avatar.jpg"} />
+                    <AvatarFallback>{name}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <Link
+                      href={`/${user.name}/${gist.id}`}
+                      className="text-blue-500 font-semibold"
+                    >
+                      {user.name}/{gist.id}
+                    </Link>
+                    <p className="text-sm text-slate-500 font-medium">
+                      Created {timeAgo(new Date(gist.createdAt))}
+                    </p>
+                    <p className="text-sm text-slate-500 font-medium">
+                      {gist.title}
+                    </p>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+                <Editor
+                  className="border border-black-500 rounded mt-2 editor"
+                  value={gist.content}
+                  onValueChange={() => {}}
+                  textareaId="codeArea"
+                  highlight={(code) =>
+                    highlightWithLineNumbers(code, languages.js)
+                  }
+                  padding={10}
+                  style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 12,
+                    outline: 0,
+                    background: theme === "light" ? "#fff" : "#0d1117",
+                  }}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
